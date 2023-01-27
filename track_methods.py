@@ -55,7 +55,7 @@ class MusicClassifier:
             tracks.extend(results['items'])
         return tracks
 
-    def get_track_uri(track):
+    def get_track_uri(self, track):
         """
         Returns a tracks uri as a string
 
@@ -75,7 +75,7 @@ class MusicClassifier:
         """
         return self.sp.track(track_uri)
 
-    def get_track_name(usable_track):
+    def get_track_name(self, usable_track):
         """
         Returns a tracks name as a string
 
@@ -84,7 +84,7 @@ class MusicClassifier:
         """
         return usable_track['name']
 
-    def get_track_artists(usable_track):
+    def get_track_artists(self, usable_track):
         """
         Returns a list of a track's artist(s)
 
@@ -95,7 +95,7 @@ class MusicClassifier:
         return [usable_track['artists'][i]['name'] 
                 for i in range(len(usable_track['artists']))]
 
-    def get_track_artists_ids(usable_track):
+    def get_track_artists_ids(self, usable_track):
         """
         Returns a list of ids for a track's artist(s)
 
@@ -114,7 +114,7 @@ class MusicClassifier:
         """
         return self.sp.artist(artist_id)['genres']
 
-    def get_lyric_url(artists, track_name):
+    def get_lyric_url(self, artists, track_name):
         """
         Returns the url for a webpage containing lyrics for a track as a string
 
@@ -140,6 +140,7 @@ class MusicClassifier:
         #Used LyricsGenius API to get lyrics instead of webscraping the website
         #because (1)the html retrieved by BS4 was before the page fully loaded
         #and (2)might get flagged for requesting too many songs
+        #Current method takes very long to run. 1m30s for 47 queries.
         return self.__genius.search_song(track_name, artist_name)     
 
     def get_playlist_df(self):
@@ -148,8 +149,7 @@ class MusicClassifier:
 
         Returns: Pandas df with playlist info
         """
-        return self.playlist_df if self.playlist_df != None \
-            else "Please run create_playlist_track_info() first!"
+        return self.playlist_df
 
     def genre_reduce(self, total_genres, reduced_genres):
         """
